@@ -2,19 +2,20 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 const crabImage = new Image();
-crabImage.src = 'crab_image_url';
+crabImage.src = 'i/kani.png';
 
 const sweetPersimmonImage = new Image();
-sweetPersimmonImage.src = 'sweet_persimmon_image_url';
+sweetPersimmonImage.src = 'i/kaki.png';
 
 const bitterPersimmonImage = new Image();
-bitterPersimmonImage.src = 'bitter_persimmon_image_url';
+bitterPersimmonImage.src = 'i/bitter_kaki.png';
 
-const stageCount = 3;
+const persimmonSize = 70; // 700x600 の 70x60 に縮小
+const crabSize = 70; // 700x600 の 70x60 に縮小
 const persimmonSpeed = 2;
 const crabSpeed = 5;
 let persimmons = [];
-let crab = { x: canvas.width / 2, y: canvas.height - 100, width: 50, height: 50 };
+let crab = { x: canvas.width / 2 - crabSize / 2, y: canvas.height - crabSize - 10, width: crabSize, height: crabSize };
 
 function init() {
     document.addEventListener('keydown', moveCrab);
@@ -34,8 +35,8 @@ function moveCrab(e) {
 }
 
 function spawnPersimmon() {
-    const x = Math.random() * (canvas.width - 50);
-    const y = -50;
+    const x = Math.random() * (canvas.width - persimmonSize);
+    const y = -persimmonSize;
     const isBitter = Math.random() < 0.2; // 20%の確率で渋い柿
     persimmons.push({ x, y, isBitter });
 }
@@ -51,9 +52,9 @@ function update() {
             if (index > -1) persimmons.splice(index, 1);
         }
         
-        if (p.y + 50 > crab.y &&
+        if (p.y + persimmonSize > crab.y &&
             p.x < crab.x + crab.width &&
-            p.x + 50 > crab.x) {
+            p.x + persimmonSize > crab.x) {
             if (p.isBitter) {
                 alert('ゲームオーバー！');
                 window.location.reload();
@@ -70,7 +71,7 @@ function draw() {
     
     persimmons.forEach(p => {
         const image = p.isBitter ? bitterPersimmonImage : sweetPersimmonImage;
-        ctx.drawImage(image, p.x, p.y, 50, 50);
+        ctx.drawImage(image, p.x, p.y, persimmonSize, persimmonSize);
     });
 }
 
